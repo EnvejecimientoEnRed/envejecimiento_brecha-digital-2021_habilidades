@@ -95,20 +95,24 @@ body, button {
                     top: 50%;
                     left: 0;
                     transform: translateY(-50%);
-                    width: 18px;
-                    height: 2px;
+                    width: 16px;
+                    height: 4px;
                 }
 
                 &.first::before {
-                    background-color: #C36B6B;
+                    background-color: #BD0202;
                 }
 
                 &.second::before {
-                    background-color: #C3A66B;
+                    background-color: #F55656;
                 }
 
                 &.third::before {
-                    background-color: #296161;
+                    background-color: #19FCFC;
+                }
+
+                &.fourth::before {
+                    background-color: #0C9494;
                 }
             }
         }        
@@ -354,7 +358,7 @@ body, button {
     opacity: 0;   
 
     width: auto;
-    max-width: 135px;
+    max-width: 150px;
     height: auto;
     padding: 8px;
     background-color: #F4F4F4;
