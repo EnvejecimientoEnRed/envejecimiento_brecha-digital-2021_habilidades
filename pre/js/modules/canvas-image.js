@@ -10,7 +10,7 @@ function setChartCanvasImage() {
     // Create a link
     var aDownloadLink = document.createElement('a');
     // Add the name of the file to the link
-    aDownloadLink.download = 'envejecimiento_centenarios-supervivientes_evolucion.png';
+    aDownloadLink.download = 'envejecimiento_brecha-digital-2021_habilidades.png';
     // Attach the data to the link
     aDownloadLink.href = image;
     // Get the code to click the download link

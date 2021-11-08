@@ -18,6 +18,7 @@ let tooltip = d3.select('#tooltip');
 
 //Variables para visualización
 let innerData = [], chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis, z_c;
+let keys, edades, margin, width, height;
 
 initChart();
 
@@ -27,7 +28,7 @@ function initChart() {
         if (error) throw error;
 
         innerData = csv.parse(data);
-        let keys = innerData.columns.slice(1);
+        keys = innerData.columns.slice(1);
 
         innerData = innerData.map(function(d) {
             return {
@@ -41,14 +42,14 @@ function initChart() {
 
         ///Agrupación de datos > Por edad y por tipo de conocimiento       
 
-        let edades = innerData.map(function(item) {
+        edades = innerData.map(function(item) {
             return item.tipo;
         });
         edades = edades.reverse();
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 13.5, bottom: 20, left: 105};
-        let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
+        margin = {top: 5, right: 13.5, bottom: 20, left: 105};
+        width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
         chart = chartBlock
@@ -160,15 +161,65 @@ function initChart() {
             .transition()
             .duration(3000)
             .attr("x", function(d) { return x_c(d[0]); })	
-            .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });
-
-        
-        
+            .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });       
     });
 }
 
 function animateChart() {
-    
+    chart.selectAll('.g_rect')
+        .remove();
+
+    chart.selectAll('.bar')
+        .data(d3.stack().keys(keys)(innerData))
+        .enter()
+        .append("g")
+        .attr("fill", function(d) { return z_c(d.key); })
+        .attr("class", function(d) { return 'g_rect rect-' + d.key; })
+        .selectAll("rect")
+        .data(function(d) { return d; })
+        .enter()
+        .append("rect")                
+        .attr("y", function(d) { return y_c(d.data.tipo) + y_c.bandwidth() / 4; })
+        .attr("x", function(d) { return x_c(0); })
+        .attr("height", y_c.bandwidth() / 2)
+        .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {
+            let css = e[i].parentNode.getAttribute('class').split('-')[1];
+
+            let currentData = {edad: d.data.tipo, data: d.data[`${css}`]};
+            //Texto
+            let html = `<p class="chart__tooltip--title">${currentData.edad}</p>
+                        <p class="chart__tooltip--text">${css}: ${currentData.data.toString().replace('.',',')}%</p>`;
+
+            tooltip.html(html);
+
+            //Posibilidad visualización línea diferente
+            let bars = chartBlock.selectAll('.g_rect');
+            
+            bars.each(function() {
+                this.style.opacity = '0.2';
+                if(this.getAttribute('class').indexOf(`rect-${css}`) != -1) {
+                    this.style.opacity = '1';
+                }
+            });
+
+            //Tooltip
+            positionTooltip(window.event, tooltip);
+            getInTooltip(tooltip);
+        })
+        .on('mouseout', function(d, i, e) {
+            //Quitamos los estilos de la línea
+            let bars = chartBlock.selectAll('.g_rect');
+            bars.each(function() {
+                this.style.opacity = '1';
+            });
+
+            //Quitamos el tooltip
+            getOutTooltip(tooltip); 
+        })
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x_c(d[0]); })	
+        .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });   
 }
 
 document.getElementById('replay').addEventListener('click', function() {
