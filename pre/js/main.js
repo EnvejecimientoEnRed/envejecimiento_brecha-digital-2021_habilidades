@@ -47,7 +47,7 @@ function initChart() {
         edades = edades.reverse();
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 13.5, bottom: 20, left: 70};
+        let margin = {top: 5, right: 13.5, bottom: 20, left: 105};
         let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
@@ -92,6 +92,11 @@ function initChart() {
 
         y_cAxis = function(svg){
             svg.call(d3.axisLeft(y_c).tickFormat(function(d) { return d; }))
+            svg.call(function(g){g.selectAll('.tick text').style('font-weight', function(d) {
+                if(d == 'Media de edades') {
+                    return 'bold';
+                }
+            })})
             svg.call(function(g){g.selectAll('.tick line').remove()})
             svg.call(function(g){g.select('.domain').remove()});
         }        
