@@ -1,4 +1,3 @@
-import { numberWithCommas, numberWithCommas2 } from './helpers';
 import { getInTooltip, getOutTooltip, positionTooltip } from './tooltip';
 import { getIframeParams } from './height';
 import { setChartCanvas, setChartCanvasImage } from './modules/canvas-image';
@@ -161,7 +160,11 @@ function initChart() {
             .transition()
             .duration(3000)
             .attr("x", function(d) { return x_c(d[0]); })	
-            .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });       
+            .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });
+            
+        setTimeout(() => {
+            setChartCanvas();
+        }, 5000);
     });
 }
 
@@ -220,6 +223,10 @@ function animateChart() {
         .duration(3000)
         .attr("x", function(d) { return x_c(d[0]); })	
         .attr("width", function(d) { return x_c(d[1]) - x_c(d[0]); });   
+
+    setTimeout(() => {
+        setChartCanvas();
+    }, 5000);
 }
 
 document.getElementById('replay').addEventListener('click', function() {
