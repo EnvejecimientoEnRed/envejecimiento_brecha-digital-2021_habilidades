@@ -1,4 +1,4 @@
-## Habilitades tecnologícas por grupos de edad
+## Habilidades tecnológicas por grupos de edad
 
 Visualización que muestra las habilidades tecnológicas por grupos de edad
 
